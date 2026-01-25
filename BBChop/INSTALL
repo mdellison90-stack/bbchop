@@ -1,20 +1,53 @@
+Installation Instructions
+=========================
 
-Er, sorry, there isn't an install procedure yet.
-
-However, it's simple to run BBChop from the source tree. You need:
-
- - a version of python (I have 2.6.2, versions close to that should work)
+Prerequisites:
+ - Python 2.6 or later (Python 2.x series)
  - mpmath (optional, but 10x faster than python's built in decimal module)
           http://code.google.com/p/mpmath/, 
 	  packaged as python-mpmath in debian based distros
 	  (bundled with sympy in fedora?)
 
 
+Installation Methods
+--------------------
 
-Once the prerequisites are installed, you can run bbchop. 
-You need to set PYTHONPATH to point at
-the source dir, eg:
+Method 1: Install using pip (recommended)
+------------------------------------------
+From the repository root directory:
 
-PYTHONPATH=/path/to/BBChop/source bbchop
+    pip install .
+
+Or, to include the optional fast mpmath dependency:
+
+    pip install .[fast]
+
+For development installation (editable mode):
+
+    pip install -e .
+
+
+Method 2: Install using setup.py
+---------------------------------
+From the repository root directory:
+
+    python setup.py install
+
+
+Method 3: Run from source tree (legacy method)
+-----------------------------------------------
+You can still run BBChop from the source tree without installation.
+You need to set PYTHONPATH to point at the source dir, eg:
+
+    PYTHONPATH=/path/to/BBChop/source bbchop
+
+
+Verifying Installation
+----------------------
+After installation, you should be able to run:
+
+    bbchop
+
+This will display the usage information.
 
 

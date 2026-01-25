@@ -1,0 +1,8 @@
+include README
+include BBChop/COPYING
+include BBChop/INSTALL
+recursive-include BBChop/doc *
+recursive-include BBChop/tests *.py
+recursive-include BBChop/interfaces *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
