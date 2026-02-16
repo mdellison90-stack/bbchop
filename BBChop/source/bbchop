@@ -46,7 +46,7 @@ options_long  = [
 ]
 
 def usage():
-    print """
+    print("""
 bbchop is a binary search program that works in the presense of false negatives. 
 
 bbchop -l <locations> -c <certainty> [<options>]
@@ -90,7 +90,7 @@ bbchop -i <file>      -c <certainty> [<options>]
                                            it is an arithmetic decay factor.
 
 
-"""
+""")
 
 
 def checkarg(arg,checkfunc):
@@ -108,7 +108,7 @@ likelihoodSet={"singlerate": likelihoods.singleRateCalc,
 
 def getIdentifiers(fname):
     try:
-        f=file(fname,"r")
+        f=open(fname,"r")
         
         res=[l.strip() for l in f]
         if len(res)==0:
@@ -119,10 +119,10 @@ def getIdentifiers(fname):
         return None   # caller must deal with error
 
 def getPrior(fname,N):
-    f=file(fname,"r")
+    f=open(fname,"r")
     prior=[float(l) for l in f]
     if len(prior)!=N:
-        raise "Wrong number of entries in prior file"
+        raise Exception("Wrong number of entries in prior file")
     return prior
     
 
@@ -203,17 +203,17 @@ class Args:
             
         if identifiersFilename is not None:
             if ancestryFilename is not None:
-                print "specification of ancestry and indentifiers are incompatible"
-                print "(identifiers are in ancestry file anyway)"
+                print("specification of ancestry and indentifiers are incompatible")
+                print("(identifiers are in ancestry file anyway)")
                 sys.exit(1)
             self.identifiers=getIdentifiers(identifiersFilename)
             if self.identifiers is None:
-                print "failed to read identifiers\n"
+                print("failed to read identifiers\n")
                 usage()
                 sys.exit()
     
         if ancestryFilename is not None:
-            f=file(ancestryFilename,"r")
+            f=open(ancestryFilename,"r")
             (self.identifiers,parents)=dagRead.read(f)
             f.close()
             self.thisDag=dag.dag(parents,len(parents))
@@ -223,27 +223,27 @@ class Args:
             
         
     
-        if likelihoodSet.has_key(self.likelihoodCalc.lower()):
+        if self.likelihoodCalc.lower() in likelihoodSet:
             self.likelihoodCalc=likelihoodSet[self.likelihoodCalc.lower()]
         else:
-            print "Argument error: Unknown likelihood function\n"
+            print("Argument error: Unknown likelihood function\n")
             usage()
             sys.exit()
             
     
         if self.logFileName is None and self.resume:
-            print "cannot resume: no logfile specified\n"
+            print("cannot resume: no logfile specified\n")
             usage()
-            sys.exit
+            sys.exit()
     
         if self.locations is None and self.identifiers is None:
-            print "Argument error: Must specify number of locations or file of identifiers\n"
+            print("Argument error: Must specify number of locations or file of identifiers\n")
             usage()
             sys.exit(1)
         elif self.locations is None:
             self.locations=len(self.identifiers)
         elif self.identifiers is None:
-            self.identifiers=[repr(i) for i in range(self.locations)]
+            self.identifiers=[repr(i) for i in list(range(self.locations))]
         
         if distPriorFilename is not None:
             self.prior=getPrior(distPriorFilename,len(self.identifiers))
@@ -252,7 +252,7 @@ class Args:
     
     
         if self.certainty is None:
-            print "Argument error: Must specify termination certainty\n"
+            print("Argument error: Must specify termination certainty\n")
             usage()
             sys.exit(1)
 
@@ -275,7 +275,7 @@ class Args:
     def getPrior(self):
         #if specified, prior is loaded in parseArgs(). Otherwise, uniform default is set here.
         if self.prior is None:
-            return [ 1/float(self.locations) for i in range(self.locations)]
+            return [ 1/float(self.locations) for i in list(range(self.locations))]
         else:
             return self.prior
 
@@ -312,16 +312,16 @@ class runClass:
             if os.WIFEXITED(retval):
                 code=os.WEXITSTATUS(retval)
                 if code!=0:
-                    raise "switch script (%s) exited with code %d \n" % (cmd,code)
+                    raise Exception("switch script (%s) exited with code %d \n" % (cmd,code))
             else:
-                raise "switch script (%s) did not exit normally\n" % (cmd)
+                raise Exception("switch script (%s) did not exit normally\n" % (cmd))
         
 
 
     def statusCallback(self,ended,mostLikely,mostLikelyProb,probs,counts):
         if ended:
-            print "\nSearch complete. ",
-        print "Most likely location is %s (probability %f)." % (self.identifiers[mostLikely],mostLikelyProb)
+            print("\nSearch complete. ", end=' ')
+        print("Most likely location is %s (probability %f)." % (self.identifiers[mostLikely],mostLikelyProb))
 
 
 # assumes unix return code from script
@@ -346,9 +346,9 @@ class scriptTest(runClass):
             elif code>0 and code<=127:
                 ret= True
             else:
-                raise "unknown exit code from (%s) = %d\n" % (cmd,code)
+                raise Exception("unknown exit code from (%s) = %d\n" % (cmd,code))
         else:
-            raise "test script (%s) did not exit normally\n" % (cmd)
+            raise Exception("test script (%s) did not exit normally\n" % (cmd))
         
         self.logger.log(where,ret)
         return ret
@@ -358,11 +358,11 @@ class scriptTest(runClass):
 class manualTest(runClass):
     def test(self,where):
         self.switch(where)
-        print "Please test at location %s." % self.identifiers[where]
+        print("Please test at location %s." % self.identifiers[where])
         prompt="Target detected at %s? Y/N/S(kip) " % self.identifiers[where]
 
         while True:
-            instr=raw_input(prompt)
+            instr=input(prompt)
             if instr in ['Y','y']:
                 ret= True
                 break
@@ -415,12 +415,12 @@ if args.doResume():
 where=finder.search()
 logger.close()
 
-print "Number of tests at %s: %d of which %d detected" %(identifiers[where],sum(finder.counts[where]),finder.counts[where][1])
+print("Number of tests at %s: %d of which %d detected" %(identifiers[where],sum(finder.counts[where]),finder.counts[where][1]))
 
 if len(thisDag.getParents(where))>0:
-    print "Number of tests at parents of %s:" % (identifiers[where])
+    print("Number of tests at parents of %s:" % (identifiers[where]))
     for p in thisDag.getParents(where):
-        print "\t At %s, %d of which %d detected" %(identifiers[p],sum(finder.counts[p]),finder.counts[p][1])
+        print("\t At %s, %d of which %d detected" %(identifiers[p],sum(finder.counts[p]),finder.counts[p][1]))
 else:
-    print "Location %s has no parents" %(identifiers[where])
+    print("Location %s has no parents" %(identifiers[where]))
 
