@@ -35,15 +35,15 @@ try:
             dagTerm=dagIds[i]
             for p in dagParents[i]:
                 if p>i:
-                    raise "invalidDag"
+                    raise Exception("invalidDag")
                 dagTerm+=' '+dagIds[p]
             if dagTerm not in dagCheck:
-                raise "missing term"
+                raise Exception("missing term")
             dagCheck=[x for x in dagCheck if x!=dagTerm]
-        print "test %d passed" %(test)
+        print("test %d passed" %(test))
 except:
-    print "FAILED"
+    print("FAILED")
     exit(1)
 
-print "PASSED"
+print("PASSED")
 exit(0)

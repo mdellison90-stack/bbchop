@@ -45,7 +45,7 @@ class CommonSubExpressions:
         for i in range(self.numVals,len(self.subExps)):
             if self.subExps[i] is None:
                 temp.append(values[i])
-            elif self.subExps[i] is -1:
+            elif self.subExps[i] == -1:
                 temp.append(nil)
             else:
                 (a,b)=self.subExps[i]

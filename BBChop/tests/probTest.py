@@ -43,7 +43,7 @@ for i in range(Ntests):
         counts.append((t,d))
     counts.append((0,0))
     cInd=(counts[0],counts[1],counts[2],counts[3],counts[4])
-    if not occ.has_key(cInd):
+    if cInd not in occ:
         occ[cInd]=[0 for i in range(N+1)]
     occ[cInd][loc]=occ[cInd][loc]+1
 
@@ -56,14 +56,14 @@ def lo(x):
     if(float(x)==0):
         return "-OO"
     return math.log(float(x)/(1-float(x)))
-for (counts,olist) in occ.iteritems():
+for (counts,olist) in occ.items():
     
     (locProbs,findProbs)=BBChop.probs(counts,prior)
-    print "c",counts
+    print("c",counts)
 #    pdb.set_trace()
-    print "l",map(lo,locProbs)
+    print("l",list(map(lo,locProbs)))
     sp=[(float(i)/sum(olist)) for i in olist]
-    print "s",sum(olist),map(lo,sp)
+    print("s",sum(olist),list(map(lo,sp)))
     
 
 
