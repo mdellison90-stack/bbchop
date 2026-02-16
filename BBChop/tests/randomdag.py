@@ -95,7 +95,7 @@ class rdag:
     def sort(self):
 
         index=[]
-        rest=range(len(self.nodes))
+        rest=list(range(len(self.nodes)))
 
 
         # dumb selection sort

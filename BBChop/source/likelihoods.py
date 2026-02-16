@@ -452,7 +452,7 @@ class likelihood:
         self.func=func
         
     def name(self):
-        return self.func.func_name
+        return self.func.__name__
 
     def probs(self,counts,locPrior,dag):
         return probs(counts,locPrior,self.func,dag)
