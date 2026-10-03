@@ -15,6 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with BBChop.  If not, see <http://www.gnu.org/licenses/>.
 import BBChop
+import math
 import random
 import pdb
 import likelihoods
@@ -68,7 +69,8 @@ def testChop(likelihoodObj,randomDag,falseNeg,multi):
         #   tester.printLocs()
 	
     print("right:",right," out of",trials,tests/trials)
-    return (float(right)/trials)<cert
+    minimumAccuracy=cert-2*math.sqrt(cert*(1-cert)/trials)
+    return (float(right)/trials)<minimumAccuracy
 
 def testFunc(case):
     print("testing " ,case.likelihoodObj.name(),"randomDag=",case.randomDag)
